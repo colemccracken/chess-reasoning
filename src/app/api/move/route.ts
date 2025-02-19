@@ -1,3 +1,5 @@
+export const maxDuration = 60;
+
 import { NextResponse } from "next/server";
 import { Groq } from "groq-sdk";
 const groq = new Groq({
@@ -29,7 +31,6 @@ export async function POST(request: Request) {
       model: "deepseek-r1-distill-llama-70b",
       temperature: 0.6,
     });
-
     // Transform the stream into a text response
     return NextResponse.json({ completion: completion });
   } catch (error: unknown) {

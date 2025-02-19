@@ -8,8 +8,14 @@ export default function Home() {
   const [chess] = useState(new Chess());
   const [fen, setFen] = useState(chess.fen());
   const [isThinking, setIsThinking] = useState(false);
+  const [lastError, setLastError] = useState<string | null>(null);
   const [chatLog, setChatLog] = useState<
-    Array<{ reasoning: string; move: string; timestamp: number }>
+    Array<{
+      reasoning?: string;
+      move?: string;
+      error?: string;
+      timestamp: number;
+    }>
   >([]);
 
   // Calculate valid moves for the current position
@@ -56,7 +62,17 @@ export default function Home() {
       });
 
       if (!response.ok) {
-        console.error("Error getting move from API");
+        const errorMessage =
+          "Failed to get move from AI. The server returned an error.";
+        console.error(errorMessage);
+        setLastError(errorMessage);
+        setChatLog((prev) => [
+          ...prev,
+          {
+            error: errorMessage,
+            timestamp: Date.now(),
+          },
+        ]);
         return;
       }
 
@@ -77,17 +93,31 @@ export default function Home() {
       setFen(chess.fen());
       console.log(chess.pgn());
     } catch (error) {
-      console.error("Error during AI move:", error);
+      const errorMessage = `An error occurred while making the AI move: ${(error as Error).message}`;
+      console.error(errorMessage);
+      setLastError(errorMessage);
+      setChatLog((prev) => [
+        ...prev,
+        {
+          error: errorMessage,
+          timestamp: Date.now(),
+        },
+      ]);
     } finally {
       setIsThinking(false);
     }
   };
 
-  // Remove the simulation functions since we're playing manually
+  const handleRetry = () => {
+    setLastError(null);
+    makeAIMove();
+  };
+
   const handleReset = () => {
     chess.reset();
     setFen(chess.fen());
     setChatLog([]);
+    setLastError(null);
   };
 
   return (
@@ -125,16 +155,38 @@ export default function Home() {
         </div>
         {chatLog.map((entry) => (
           <div key={entry.timestamp} className="mb-6 p-4 rounded">
-            <div className="flex items-center">
-              <div className="text-sm">Move made:</div>
-              <div className="ml-2 px-2 py-1 rounded font-mono">
-                {entry.move}
+            {entry.error ? (
+              <div className="text-red-600">
+                <div className="mb-2">{entry.error}</div>
+                {entry.timestamp === chatLog[chatLog.length - 1]?.timestamp &&
+                  lastError && (
+                    <button
+                      type="button"
+                      onClick={handleRetry}
+                      className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600"
+                    >
+                      Retry Move
+                    </button>
+                  )}
               </div>
-            </div>
-            <details className="mt-2">
-              <summary className="text-sm cursor-pointer">Reasoning</summary>
-              <p className="whitespace-pre-wrap mt-2 pl-4">{entry.reasoning}</p>
-            </details>
+            ) : (
+              <>
+                <div className="flex items-center">
+                  <div className="text-sm">Move made:</div>
+                  <div className="ml-2 px-2 py-1 rounded font-mono">
+                    {entry.move}
+                  </div>
+                </div>
+                <details className="mt-2">
+                  <summary className="text-sm cursor-pointer">
+                    Reasoning
+                  </summary>
+                  <p className="whitespace-pre-wrap mt-2 pl-4">
+                    {entry.reasoning}
+                  </p>
+                </details>
+              </>
+            )}
           </div>
         ))}
       </div>
