@@ -91,7 +91,7 @@ export default function Home() {
   };
 
   return (
-    <div className="flex flex-wrap gap-8 p-8">
+    <div className="flex flex-col lg:flex-row gap-8 p-8">
       <div>
         <Chessground
           fen={fen}
