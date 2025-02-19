@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     siteName: "Chess Reasoning",
     images: [
       {
-        url: "/chess-reasoning-clip.png",
+        url: "/chess-reasoning-og.png",
         width: 1200,
         height: 630,
         alt: "Chess Reasoning - Play chess against reasoning models powered by Groq",

@@ -134,13 +134,22 @@ export default function Home() {
           turnColor={chess.turn() === "w" ? "white" : "black"}
           onMove={onMove}
         />
-        <button
-          onClick={handleReset}
-          type="button"
-          className="mt-4 mb-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-        >
-          Reset Game
-        </button>
+        <div className="flex my-8 w-full">
+          <button
+            onClick={handleReset}
+            type="button"
+            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+          >
+            Reset Game
+          </button>
+          <img
+            src="/powered_by_groq.svg"
+            alt="powered_by_groq"
+            width={100}
+            height={40}
+            className="ml-auto invert"
+          />
+        </div>
       </div>
 
       <div className="h-full w-full overflow-y-auto border rounded p-4">
