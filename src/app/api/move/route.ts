@@ -20,7 +20,7 @@ export async function POST(request: Request) {
         {
           role: "system",
           content:
-            "You are an excellent chess player. You think several moves ahead and develop long term plans in order to win the game. You are given a game state and list of available moves, and you will select the best move from the available options. Respond only with the selected move, no additional explanation.",
+            "You are an excellent chess player. You think several moves ahead and develop long term plans in order to win the game. You are given a game state and list of available moves, and you will select the best move from the available options. Respond only with the selected move, no additional explanation. Be concise.",
         },
         {
           role: "user",
@@ -28,8 +28,9 @@ export async function POST(request: Request) {
         },
       ],
       reasoning_format: "parsed",
-      model: "deepseek-r1-distill-llama-70b",
+      model: "qwen-qwq-32b",
       temperature: 0.6,
+      top_p: 0.95,
     });
     // Transform the stream into a text response
     return NextResponse.json({ completion: completion });
