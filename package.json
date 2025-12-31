@@ -13,7 +13,7 @@
     "chess.js": "^1.0.0",
     "chessground": "^9.1.1",
     "groq-sdk": "^0.15.0",
-    "next": "15.1.7",
+    "next": "15.1.11",
     "react": "^19.0.0",
     "react-chessground": "^1.5.0",
     "react-dom": "^19.0.0"
